@@ -24,7 +24,7 @@ function a(url, method = 'get', data = {}) {
     data.secure = token;
     return $.parseJSON(
       $.ajax({
-        url: 'http://almor.pythonanywhere.com/'+url + ((url.slice(-1) != '/')?'/':''),
+        url: 'https://almor.pythonanywhere.com/'+url + ((url.slice(-1) != '/')?'/':''),
         method: method,
         data: data,
         dataType: "json",
