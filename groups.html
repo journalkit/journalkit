@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"> -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Группы</title>
+  </head>
+  <body>
+    <img src="img/loader.gif" alt="Загрузка..." id="loader">
+
+    <div class="flex-center load">
+      <div class="menu" id="menu">
+        <a href="index.html">Главная</a>
+        <a href="tab.html" v-if="role.lessons">Табели</a>
+        <a href="ved.html" v-if="role.exams">Ведомости</a>
+        <a href="exams.html" v-if="role.exams_admin">Экзамены</a>
+        <a href="users.html" v-if="role.users">Пользователи</a>
+        <a href="disciplines.html" v-if="role.disciplines">Дисциплины</a>
+        <a href="groups.html" v-if="role.groups" class="cur">Группы</a>
+        <a href="documents.html" v-if="role.docs">Документы</a>
+        <a id="logout">Выход</a>
+      </div>
+    </div>
+
+    <div class="content load" id="groups">
+      <div v-if="!curItem">
+        <div class="list_new">
+          <input class="btn" type="button" value="Новая группа" v-on:click="createItem()">
+        </div>
+        <div class="list">
+          <div v-if="newItem">
+            <div class="form">
+              <input class="input" placeholder="Название" :value="newItem.name" v-on:input="newItem.name = $event.target.value">
+              <div class="flex-center mt20">
+                <input class="btn" type="button" value="Сохранить" v-on:click="saveNewItem()">
+                <input class="btn btn_del" type="button" value="Отмена" v-on:click="newItem = false">
+              </div>
+            </div>
+          </div>
+          <template v-if="list.length > 0">
+            <div v-for="(item, index) in list" :key="item.id">
+              <div class="listItem hoverable" v-on:click="openItem(index, $event)">
+                <template v-if="!item.change">
+                  <div class="listItem__title">{{ item.name }}</div>
+                </template>
+                <template v-else>
+                  <input class="input" placeholder="Название" :value="item.name" v-on:input="item.name = $event.target.value">
+                </template>
+                <div class="listItem__footer flex-center">
+                  <template v-if="!item.change">
+                    <input class="btn" type="button" value="Изменить" v-on:click="item.change = true">
+                    <input class="btn btn_del" type="button" value="Удалить" v-on:click="deleteItem(item.id, index)">
+                  </template>
+                  <template v-else>
+                    <input class="btn" type="button" value="Сохранить" v-on:click="saveItem(item.id, index)">
+                    <input class="btn btn_del" type="button" value="Отмена" v-on:click="item.change = false">
+                  </template>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+        <div class="list_empty" v-if="list.length == 0 && !newItem">
+          Нет элементов
+        </div>
+      </div>
+      <div v-else>
+        <div class="header">
+          <div class="header__title">{{ 'Студенты группы ' + curItem.name }}</div>
+          <div class="header_buttons">
+            <input class="btn btn_inline" type="button" value="Вернуться к списку" v-on:click="closeItem()">
+          </div>
+        </div>
+
+        <div class="tableWrapper">
+          <div class="c3">
+            <table class="table">
+              <tr>
+                <td class="g c">№</td>
+                <td class="g c">Фамилия</td>
+                <td class="g c">Имя</td>
+                <td class="g c">Отчество</td>
+                <td class="g c">№ Зачетной книжки</td>
+                <td class="g c"></td>
+              </tr>
+
+              <tr v-for="(student, index) in students">
+                <td align="center">{{index+1}}</td>
+                <td align="center">
+                  <input type="text" class="input input_small" :value="student.surname"  v-on:change="changeStudent('surname', $event.target.value, index)" placeholder="Фамилия">
+                </td>
+                <td align="center">
+                  <input type="text" class="input input_small" :value="student.name"  v-on:change="changeStudent('name', $event.target.value, index)" placeholder="Имя">
+                </td>
+                <td align="center">
+                  <input type="text" class="input input_small" :value="student.patronymic"  v-on:change="changeStudent('patronymic', $event.target.value, index)" placeholder="Отчество">
+                </td>
+                <td align="center">
+                  <input type="text" class="input input_small" :value="student.record_book"  v-on:change="changeStudent('record_book', $event.target.value, index)" placeholder="Зачётная книжка">
+                </td>
+                <td>
+                  <span class="cp" v-on:click="removeStudent(student.id, index)">❌</span>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" colspan="6">
+                  <div class="ti" v-if="students.length == 0">
+                    Нет студентов
+                  </div>
+                  <input class="btn btn_small" type="button" value="Добавить студента" v-on:click="students.push({})">
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script type="text/javascript" src="/js/libs.min.js" defer></script>
+    <script type="text/javascript" src="/js/main.js" defer></script>
+  </body>
+</html>

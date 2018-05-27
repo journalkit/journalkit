@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"> -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Экзамены</title>
+  </head>
+  <body>
+    <img src="img/loader.gif" alt="Загрузка..." id="loader">
+
+    <div class="flex-center load">
+      <div class="menu" id="menu">
+        <a href="index.html">Главная</a>
+        <a href="tab.html" v-if="role.lessons">Табели</a>
+        <a href="ved.html" v-if="role.exams">Ведомости</a>
+        <a href="exams.html" v-if="role.exams_admin" class="cur">Экзамены</a>
+        <a href="users.html" v-if="role.users">Пользователи</a>
+        <a href="disciplines.html" v-if="role.disciplines">Дисциплины</a>
+        <a href="groups.html" v-if="role.groups">Группы</a>
+        <a href="documents.html" v-if="role.docs">Документы</a>
+        <a id="logout">Выход</a>
+      </div>
+    </div>
+
+    <div class="content load" id="exams">
+      <div class="list" v-if="list.length > 0">
+        <div v-for="(item, index) in list">
+          <div class="listItem">
+            <div class="listItem__title">{{ item.discipline + ' ' + item.group }}</div>
+            <div class="row">Преподаватель: {{item.teacher}}</div>
+            <div class="row">Группа: {{item.group}}</div>
+            <div class="row">Дисциплина: {{item.discipline}}</div>
+            <div class="row">Дата экзамена: {{item.date}}</div>
+            <div class="row">Статус: {{item.closed?'Ведомость закрыта':'Ведомость открыта'}}</div>
+            <div class="listItem__footer">
+              <input class="btn btn_del" type="button" value="Удалить" v-on:click="deleteItem(item.id, index)">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list_empty" v-if="list.length == 0">
+        Нет элементов
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="/js/libs.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+  </body>
+</html>

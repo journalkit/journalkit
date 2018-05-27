@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"> -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Группы</title>
+  </head>
+  <body>
+    <img src="img/loader.gif" alt="Загрузка..." id="loader">
+
+    <div class="flex-center load">
+      <div class="menu" id="menu">
+        <a href="index.html">Главная</a>
+        <a href="tab.html" v-if="role.lessons">Табели</a>
+        <a href="ved.html" v-if="role.exams">Ведомости</a>
+        <a href="exams.html" v-if="role.exams_admin">Экзамены</a>
+        <a href="users.html" v-if="role.users">Пользователи</a>
+        <a href="disciplines.html" v-if="role.disciplines">Дисциплины</a>
+        <a href="groups.html" v-if="role.groups">Группы</a>
+        <a href="documents.html" v-if="role.docs" class="cur">Документы</a>
+        <a id="logout">Выход</a>
+      </div>
+    </div>
+
+    <div class="content load" id="docs">
+      <div v-if="!curGroup">
+        <div class="header__title">Выберите группу для накопительной ведомости</div>
+        <div class="list" v-if="groups.length > 0">
+          <div v-for="(group, index) in groups">
+            <div class="listItem hoverable listItem_choice" v-on:click="openDoc(group)">
+              <div class="listItem__title">{{ group.name }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="list_empty" v-if="groups.length == 0 && !newItem">
+          Нет групп
+        </div>
+      </div>
+      <div v-else>
+        <div class="header">
+          <div class="header__title">{{ 'Накопительная ведомость по группе ' + curGroup.name }}</div>
+          <div class="header_buttons">
+            <input class="btn btn_inline" type="button" value="Выбрать другую группу" v-on:click="curGroup = false">
+          </div>
+        </div>
+
+        <div class="tableWrapper" v-if="students.length > 0 && terms.length > 0">
+          <div class="c3">
+            <table class="table">
+              <tr>
+                <td class="c">Название дисциплины</td>
+                <td v-for="(student, index) in students"><span class="v">{{student.surname + ' ' + student.name + ' ' + student.patronymic}}</span></td>
+              </tr>
+
+              <template v-for="(term, index) in terms">
+                <tr v-if="index%2==0">
+                  <td class="g c b" :colspan="students.length + 1">{{ (index/2 + 1) + ' курс'}}</td>
+                </tr>
+                <tr>
+                  <td class="g c" :colspan="students.length + 1">{{term.name}}</td>
+                </tr>
+
+                <tr v-for="exam in term.exams">
+                  <td>{{exam.name}}</td>
+                  <td class="c" v-for="mark in exam.marks">{{mark}}</td>
+                </tr>
+              </template>
+            </table>
+          </div>
+        </div>
+        <div class="list_empty err" v-if="students.length == 0">
+          В группе нет студентов
+        </div>
+        <div class="list_empty err" v-if="students.length > 0 && terms.length == 0">
+          У группы не было экзаменов
+        </div>
+      </div>
+    </div>
+
+
+    <script type="text/javascript" src="/js/libs.min.js" defer></script>
+    <script type="text/javascript" src="/js/main.js" defer></script>
+  </body>
+</html>

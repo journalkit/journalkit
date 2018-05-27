@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"> -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <title>Пользователи</title>
+  </head>
+  <body>
+    <img src="img/loader.gif" alt="Загрузка..." id="loader">
+
+    <div class="flex-center load">
+      <div class="menu" id="menu">
+        <a href="index.html">Главная</a>
+        <a href="tab.html" v-if="role.lessons">Табели</a>
+        <a href="ved.html" v-if="role.exams">Ведомости</a>
+        <a href="exams.html" v-if="role.exams_admin">Экзамены</a>
+        <a href="users.html" v-if="role.users" class="cur">Пользователи</a>
+        <a href="disciplines.html" v-if="role.disciplines">Дисциплины</a>
+        <a href="groups.html" v-if="role.groups">Группы</a>
+        <a href="documents.html" v-if="role.docs">Документы</a>
+        <a id="logout">Выход</a>
+      </div>
+    </div>
+
+    <div class="content load" id="users">
+      <div class="list_new">
+        <input class="btn" type="button" value="Новый преподаватель" v-on:click="newItem">
+      </div>
+      <div class="list" v-if="list.length > 0">
+        <div v-for="(item, index) in list">
+          <div class="listItem">
+            <div class="listItem__title">{{ item.new?'Новый преподаватель':item.name + ' ' + item.patronymic }}</div>
+            <input class="input" placeholder="Имя" :value="item.name" v-on:input="item.name = $event.target.value">
+            <input class="input" placeholder="Фамилия" :value="item.surname" v-on:input="item.surname = $event.target.value">
+            <input class="input" placeholder="Отчество" :value="item.patronymic" v-on:input="item.patronymic = $event.target.value">
+            <input class="input" placeholder="Логин" :value="item.login" v-on:input="item.login = $event.target.value">
+            <input class="input" :placeholder="item.new?'Пароль':'Установить новый пароль'" :value="item.newPassword" v-on:input="item.newPassword = $event.target.value">
+            <div class="flex-center listItem__footer">
+              <input class="btn" type="button" value="Сохранить" v-on:click="saveItem(item.id, index)">
+              <input class="btn btn_del" type="button" value="Удалить" v-on:click="deleteItem(item.id, index)" v-if="!item.new">
+              <input class="btn btn_del" type="button" value="Отмена" v-on:click="removeItem(index)" v-else>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list_empty" v-if="list.length == 0">
+        Нет элементов
+      </div>
+    </div>
+
+    <script type="text/javascript" src="/js/libs.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+  </body>
+</html>
